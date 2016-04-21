@@ -4,10 +4,12 @@ package com.squareup.timessquare;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;
@@ -150,7 +152,7 @@ public class MonthView extends LinearLayout {
       grid.setTypeface(dateTypeface);
     }
 
-    Logr.d("MonthView.init took %d ms", System.currentTimeMillis() - start);
+    Log.d("春秋旅游","春秋旅游init="+(System.currentTimeMillis() - start));
   }
 
   public void setDividerColor(int color) {

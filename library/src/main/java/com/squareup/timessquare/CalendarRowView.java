@@ -22,7 +22,7 @@ public class CalendarRowView extends ViewGroup implements View.OnClickListener {
     super(context, attrs);
   }
 
-  @Override public void addView(View child, int index, ViewGroup.LayoutParams params) {
+  @Override public void addView(View child, int index, LayoutParams params) {
     child.setOnClickListener(this);
     super.addView(child, index, params);
   }
