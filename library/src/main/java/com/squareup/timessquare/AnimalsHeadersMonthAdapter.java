@@ -23,6 +23,7 @@ import java.util.Locale;
  * 主要功能: 日历适配器
  * 创建时间：2016/4/20 18:04
  */
+@Deprecated
 public class AnimalsHeadersMonthAdapter extends AnimalsAdapter<RecyclerView.ViewHolder>
         implements StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
 
@@ -131,8 +132,11 @@ public class AnimalsHeadersMonthAdapter extends AnimalsAdapter<RecyclerView.View
                     CalendarCellView cellView = (CalendarCellView) weekRow.getChildAt(c);
 
                     String cellDate = numberFormatter.format(cell.getValue());
-                    if (!cellView.getDayOfMonthTextView().getText().equals(cellDate)) {
+                    if (!cellView.getDayOfMonthTextView().getText().equals(cellDate) && !cell.isCurrentMonth()) {
                         cellView.getDayOfMonthTextView().setText(cellDate);
+                        if (cell.isToday()) {
+                            cellView.getDayOfMonthTextView().setText("今天");
+                        }
                     }
                     cellView.setEnabled(cell.isCurrentMonth());
                     cellView.setClickable(!displayOnly);

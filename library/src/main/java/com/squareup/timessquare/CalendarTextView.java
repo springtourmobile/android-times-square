@@ -1,15 +1,15 @@
-// Copyright 2013 Square, Inc.
-
 package com.squareup.timessquare;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.squareup.timessquare.MonthCellDescriptor.RangeState;
-
-public class CalendarCellView extends FrameLayout {
+/**
+ * 作者：wangdakuan
+ * 主要功能: 文字自定义控件
+ * 创建时间：2016/4/21 17:29
+ */
+public class CalendarTextView extends TextView {
     private static final int[] STATE_SELECTABLE = {
             R.attr.tsquare_state_selectable
     };
@@ -32,25 +32,30 @@ public class CalendarCellView extends FrameLayout {
             R.attr.tsquare_state_range_last
     };
 
+
     private boolean isSelectable = false;
     private boolean isCurrentMonth = false;
     private boolean isToday = false;
     private boolean isHighlighted = false;
-    private RangeState rangeState = RangeState.NONE;
-    private CalendarTextView dayOfMonthTextView; //日期控件
-    private CalendarTextView priceTextView; //价格
-    private CalendarTextView holidayTextView; //节日
-    private TextView mCustomView; //自定义控件
-
-    @SuppressWarnings("UnusedDeclaration") //
-    public CalendarCellView(Context context, AttributeSet attrs) {
+    private MonthCellDescriptor.RangeState rangeState = MonthCellDescriptor.RangeState.NONE;
+    public CalendarTextView(Context context) {
+        super(context);
+    }
+    public CalendarTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    public CalendarTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    public CalendarTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     public void setSelectable(boolean isSelectable) {
         if (this.isSelectable != isSelectable) {
             this.isSelectable = isSelectable;
-            dayOfMonthTextView.setSelectable(isSelectable);
             refreshDrawableState();
         }
     }
@@ -58,7 +63,6 @@ public class CalendarCellView extends FrameLayout {
     public void setCurrentMonth(boolean isCurrentMonth) {
         if (this.isCurrentMonth != isCurrentMonth) {
             this.isCurrentMonth = isCurrentMonth;
-            dayOfMonthTextView.setCurrentMonth(isCurrentMonth);
             refreshDrawableState();
         }
     }
@@ -66,7 +70,6 @@ public class CalendarCellView extends FrameLayout {
     public void setToday(boolean isToday) {
         if (this.isToday != isToday) {
             this.isToday = isToday;
-            dayOfMonthTextView.setToday(isToday);
             refreshDrawableState();
         }
     }
@@ -74,7 +77,6 @@ public class CalendarCellView extends FrameLayout {
     public void setRangeState(MonthCellDescriptor.RangeState rangeState) {
         if (this.rangeState != rangeState) {
             this.rangeState = rangeState;
-            dayOfMonthTextView.setRangeState(rangeState);
             refreshDrawableState();
         }
     }
@@ -82,7 +84,6 @@ public class CalendarCellView extends FrameLayout {
     public void setHighlighted(boolean isHighlighted) {
         if (this.isHighlighted != isHighlighted) {
             this.isHighlighted = isHighlighted;
-            dayOfMonthTextView.setHighlighted(isHighlighted);
             refreshDrawableState();
         }
     }
@@ -99,8 +100,7 @@ public class CalendarCellView extends FrameLayout {
         return isSelectable;
     }
 
-    @Override
-    protected int[] onCreateDrawableState(int extraSpace) {
+    @Override protected int[] onCreateDrawableState(int extraSpace) {
         final int[] drawableState = super.onCreateDrawableState(extraSpace + 5);
 
         if (isSelectable) {
@@ -118,51 +118,15 @@ public class CalendarCellView extends FrameLayout {
         if (isHighlighted) {
             mergeDrawableStates(drawableState, STATE_HIGHLIGHTED);
         }
+
         if (rangeState == MonthCellDescriptor.RangeState.FIRST) {
             mergeDrawableStates(drawableState, STATE_RANGE_FIRST);
         } else if (rangeState == MonthCellDescriptor.RangeState.MIDDLE) {
             mergeDrawableStates(drawableState, STATE_RANGE_MIDDLE);
-        } else if (rangeState == RangeState.LAST) {
+        } else if (rangeState == MonthCellDescriptor.RangeState.LAST) {
             mergeDrawableStates(drawableState, STATE_RANGE_LAST);
         }
 
         return drawableState;
-    }
-
-    public void setDayOfMonthTextView(CalendarTextView textView) {
-        dayOfMonthTextView = textView;
-    }
-
-    public CalendarTextView getDayOfMonthTextView() {
-        if (dayOfMonthTextView == null) {
-            throw new IllegalStateException(
-                    "You have to setDayOfMonthTextView in your custom DayViewAdapter."
-            );
-        }
-        return dayOfMonthTextView;
-    }
-
-    public CalendarTextView getHolidayTextView() {
-        return holidayTextView;
-    }
-
-    public void setHolidayTextView(CalendarTextView holidayTextView) {
-        this.holidayTextView = holidayTextView;
-    }
-
-    public CalendarTextView getPriceTextView() {
-        return priceTextView;
-    }
-
-    public void setPriceTextView(CalendarTextView priceTextView) {
-        this.priceTextView = priceTextView;
-    }
-
-    public TextView getCustomView() {
-        return mCustomView;
-    }
-
-    public void setCustomView(TextView mCustomView) {
-        this.mCustomView = mCustomView;
     }
 }

@@ -1,15 +1,35 @@
 <!-- Copyright 2012 Square, Inc. -->
 <resources>
-  <color name="calendar_active_month_bg">#cbd2d9</color> <!--普通背景-->
-  <color name="calendar_bg">#b75151</color> <!--默认全部背景-->
-  <color name="calendar_divider">#00000000</color> <!--分割线-->
-  <color name="calendar_inactive_month_bg">#a3a6a9</color> <!--无用的日期背景-->
-  <color name="calendar_selected_day_bg">#ff379bff</color> <!--日期选中的背景-->
-  <color name="calendar_highlighted_day_bg">#08e408</color> <!--设置某些日期背景颜色-->
-  <color name="calendar_selected_range_bg">#665588</color> <!--范围背景-->
-  <color name="calendar_text_inactive">#400e82e9</color> <!--不可点击或是不重要的日期字体颜色-->
-  <color name="calendar_text_active">#aa32c6</color> <!--可点击的或重要的日期字体颜色-->
-  <color name="calendar_text_selected">#ffffffff</color> <!--选中的日期字体颜色-->
-  <color name="calendar_text_unselectable">#e9f2ac07</color> <!--超过范围不可点击的字体颜色-->
-  <color name="calendar_text_highlighted">#ed1e0b</color>  <!--设置某些日期字体颜色-->
+    <color name="calendar_active_month_bg">#FFFFFF</color>
+    <!--普通背景-->
+    <color name="calendar_bg">#FFFFFF</color>
+    <!--默认全部背景-->
+    <color name="calendar_divider">#00000000</color>
+    <!--分割线-->
+    <color name="calendar_inactive_month_bg">#FFFFFF</color>
+    <!--无用的日期背景-->
+    <color name="calendar_selected_day_bg">#1CBC76</color>
+    <!--日期选中的背景-->
+    <color name="calendar_highlighted_day_bg">#08e408</color>
+    <!--设置某些日期背景颜色-->
+    <color name="calendar_selected_range_bg">#FFEFEF</color>
+    <!--选中范围背景-->
+    <color name="calendar_state_today_bg">#FFFFFF</color>
+    <!--当天的背景-->
+    <color name="calendar_text_today">#666666</color>
+    <!--当天的字体-->
+    <color name="calendar_text_inactive">#00000000</color>
+    <!--不可点击或是不重要的日期字体颜色 每月前或后的日期-->
+    <color name="calendar_text_active">#666666</color>
+    <!--可点击的或重要的日期字体颜色-->
+    <color name="calendar_text_selected">#ffffff</color>
+    <!--选中的日期字体颜色-->
+    <color name="calendar_text_unselectable">#AAAAAA</color>
+    <!--超过范围不可点击的字体颜色-->
+    <color name="calendar_text_highlighted">#ed1e0b</color>
+    <!--设置某些日期字体颜色-->
+    <color name="calendar_bg_range_first">#1CBC76</color>
+    <!--选中的去的日期背景-->
+    <color name="calendar_bg_range_last">#ed1e0b</color>
+    <!--选中的返的日期背景-->
 </resources>

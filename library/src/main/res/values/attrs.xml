@@ -11,12 +11,13 @@
   </declare-styleable>
 
   <declare-styleable name="calendar_cell">
-    <attr name="tsquare_state_selectable" format="boolean" />
-    <attr name="tsquare_state_current_month" format="boolean" />
-    <attr name="tsquare_state_today" format="boolean" />
-    <attr name="tsquare_state_range_first" format="boolean" />
-    <attr name="tsquare_state_range_middle" format="boolean" />
-    <attr name="tsquare_state_range_last" format="boolean" />
+    <attr name="tsquare_state_selectable" format="boolean" /> <!--范围之外-->
+    <attr name="tsquare_state_current_month" format="boolean" /> <!--不可点击，在每月后或前显示的前后月的日期-->
+    <attr name="tsquare_state_today" format="boolean" /> <!--是否是今天内容-->
+    <attr name="tsquare_state_go" format="boolean" /> <!--去程-->
+    <attr name="tsquare_state_range_first" format="boolean" /> <!--选中的去-->
+    <attr name="tsquare_state_range_middle" format="boolean" /> <!--选中的范围背景-->
+    <attr name="tsquare_state_range_last" format="boolean" /> <!--选中的返-->
     <attr name="tsquare_state_highlighted" format="boolean" />
   </declare-styleable>
 </resources>

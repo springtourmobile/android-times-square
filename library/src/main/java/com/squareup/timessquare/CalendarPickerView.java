@@ -68,7 +68,7 @@ public class CalendarPickerView extends RecyclerView {
 
     // TODO: 2016/4/21 RecyclerView
 //    private final AnimalsHeadersMonthAdapter headersMonthAdapter;
-    private final RecyMonthAdapter headersMonthAdapter;
+    private RecyMonthAdapter headersMonthAdapter;
     private LinearLayoutManager layoutManager;
     // TODO: 2016/4/21 ListView
 //    private final CalendarPickerView.MonthAdapter adapter;
@@ -107,6 +107,8 @@ public class CalendarPickerView extends RecyclerView {
     private List<CalendarCellDecorator> decorators;
     private DayViewAdapter dayViewAdapter = new DefaultDayViewAdapter();
 
+    private Context mContext;
+
     public void setDecorators(List<CalendarCellDecorator> decorators) {
         this.decorators = decorators;
 //        if (null != adapter) {
@@ -115,7 +117,7 @@ public class CalendarPickerView extends RecyclerView {
         if (null != headersMonthAdapter) {
             headersMonthAdapter.notifyDataSetChanged();
         }
-        Log.e("春秋旅游","------setDecorators-------");
+        Log.e("春秋旅游", "------setDecorators-------");
     }
 
     public List<CalendarCellDecorator> getDecorators() {
@@ -124,7 +126,7 @@ public class CalendarPickerView extends RecyclerView {
 
     public CalendarPickerView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
+        this.mContext = context;
         Resources res = context.getResources();
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CalendarPickerView);
         final int bg = a.getColor(R.styleable.CalendarPickerView_android_background,
@@ -182,11 +184,11 @@ public class CalendarPickerView extends RecyclerView {
      * of day will be ignored.  For instance, if you pass in {@code minDate} as 11/16/2012 5:15pm and
      * {@code maxDate} as 11/16/2013 4:30am, 11/16/2012 will be the first selectable date and
      * 11/15/2013 will be the last selectable date ({@code maxDate} is exclusive).
-     * <p/>
+     * <p>
      * This will implicitly set the {@link SelectionMode} to {@link SelectionMode#SINGLE}.  If you
      * want a different selection mode, use {@link FluentInitializer#inMode(SelectionMode)} on the
      * {@link FluentInitializer} this method returns.
-     * <p/>
+     * <p>
      * The calendar will be constructed using the given locale. This means that all names
      * (months, days) will be in the language of the locale and the weeks start with the day
      * specified by the locale.
@@ -268,11 +270,11 @@ public class CalendarPickerView extends RecyclerView {
      * of day will be ignored.  For instance, if you pass in {@code minDate} as 11/16/2012 5:15pm and
      * {@code maxDate} as 11/16/2013 4:30am, 11/16/2012 will be the first selectable date and
      * 11/15/2013 will be the last selectable date ({@code maxDate} is exclusive).
-     * <p/>
+     * <p>
      * This will implicitly set the {@link SelectionMode} to {@link SelectionMode#SINGLE}.  If you
      * want a different selection mode, use {@link FluentInitializer#inMode(SelectionMode)} on the
      * {@link FluentInitializer} this method returns.
-     * <p/>
+     * <p>
      * The calendar will be constructed using the default locale as returned by
      * {@link Locale#getDefault()}. If you wish the calendar to be constructed using a
      * different locale, use {@link #init(Date, Date, Locale)}.
@@ -359,7 +361,7 @@ public class CalendarPickerView extends RecyclerView {
 //        if(null != adapter){
 //            adapter.notifyDataSetChanged();
 //        }
-        Log.e("春秋旅游","------validateAndUpdate-------");
+        Log.e("春秋旅游", "------validateAndUpdate-------");
         if (null != headersMonthAdapter) {
             headersMonthAdapter.notifyDataSetChanged();
         }
@@ -558,7 +560,7 @@ public class CalendarPickerView extends RecyclerView {
      * with: if you are in {@link SelectionMode#SINGLE}, the previously selected date will be
      * un-selected.  In {@link SelectionMode#MULTIPLE}, the new date will be added to the list of
      * selected dates.
-     * <p/>
+     * <p>
      * If the selection was made (selectable date, in range), the view will scroll to the newly
      * selected date if it's not already visible.
      *
@@ -573,7 +575,7 @@ public class CalendarPickerView extends RecyclerView {
      * with: if you are in {@link SelectionMode#SINGLE}, the previously selected date will be
      * un-selected.  In {@link SelectionMode#MULTIPLE}, the new date will be added to the list of
      * selected dates.
-     * <p/>
+     * <p>
      * If the selection was made (selectable date, in range), the view will scroll to the newly
      * selected date if it's not already visible.
      *
@@ -643,6 +645,9 @@ public class CalendarPickerView extends RecyclerView {
             if (selectedCells.size() == 0 || !selectedCells.get(0).equals(cell)) {
                 selectedCells.add(cell);
                 cell.setSelected(true);
+                if (selectionMode == SelectionMode.RANGE) {
+                    selectedCells.get(0).setRangeState(MonthCellDescriptor.RangeState.FIRST);
+                }
             }
             selectedCals.add(newlySelectedCal);
 
@@ -668,10 +673,8 @@ public class CalendarPickerView extends RecyclerView {
                 }
             }
         }
-        Log.e("春秋旅游","-------doSelectDate-----");
+        Log.e("春秋旅游", "-------doSelectDate-----");
         // Update the adapter.
-        headersMonthAdapter.initYearsOrMonthData(months, titleTypeface);
-        headersMonthAdapter.initDayMonthData(cells, dateTypeface, displayOnly);
         validateAndUpdate();
         return date != null;
     }
@@ -830,6 +833,11 @@ public class CalendarPickerView extends RecyclerView {
         }
     }
 
+    private static boolean isLeapyear = false; // 是否为闰年
+    private static int daysOfMonth = 0; // 某月的天数
+    private static int dayOfWeek = 0; // 具体某一天是星期几
+    private static int lastDaysOfMonth = 0; // 上一个月的总天数
+
     List<List<MonthCellDescriptor>> getMonthCells(MonthDescriptor month, Calendar startCal) {
         Calendar cal = Calendar.getInstance(locale);
         cal.setTime(startCal.getTime());
@@ -952,7 +960,7 @@ public class CalendarPickerView extends RecyclerView {
     /**
      * Set a listener used to discriminate between selectable and unselectable dates. Set this to
      * disable arbitrary dates as they are rendered.
-     * <p/>
+     * <p>
      * Important: set this before you call {@link #init(Date, Date)} methods.  If called afterwards,
      * it will not be consistently applied.
      */
@@ -963,7 +971,7 @@ public class CalendarPickerView extends RecyclerView {
 
     /**
      * Set an adapter used to initialize {@link CalendarCellView} with custom layout.
-     * <p/>
+     * <p>
      * Important: set this before you call {@link #init(Date, Date)} methods.  If called afterwards,
      * it will not be consistently applied.
      */
@@ -972,10 +980,19 @@ public class CalendarPickerView extends RecyclerView {
 //        if (null != adapter) {
 //            adapter.notifyDataSetChanged();
 //        }
+        headersMonthAdapter = new RecyMonthAdapter(weekdayNameFormat, listener, today, dividerColor,
+                dayBackgroundResId, dayTextColorResId, titleTextColor, displayHeader,
+                headerTextColor, decorators, locale, dayViewAdapter);
+        layoutManager = new LinearLayoutManager(mContext);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        headersMonthAdapter.initYearsOrMonthData(months, titleTypeface);
+        headersMonthAdapter.initDayMonthData(cells, dateTypeface, displayOnly);
+        setLayoutManager(layoutManager);
+        setAdapter(headersMonthAdapter);
         if (null != headersMonthAdapter) {
             headersMonthAdapter.notifyDataSetChanged();
         }
-        Log.e("春秋旅游","------setCustomDayView-------");
+        Log.e("春秋旅游", "------setCustomDayView-------");
     }
 
     /**

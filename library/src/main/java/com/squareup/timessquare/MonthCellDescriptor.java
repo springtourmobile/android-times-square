@@ -20,6 +20,7 @@ class MonthCellDescriptor {
     private final boolean isSelectable;
     private boolean isHighlighted;
     private RangeState rangeState;
+    private String holiday; //节日
 
     /**
      * @param date 日期
@@ -40,6 +41,29 @@ class MonthCellDescriptor {
         isSelected = selected;
         isToday = today;
         this.value = value;
+        this.rangeState = rangeState;
+    }
+
+    /**
+     * @param date 日期
+     * @param currentMonth 不可点击或是不重要的日期字体颜色和背景
+     * @param selectable 是否可选择
+     * @param selected 是否选中
+     * @param today 是否是今天
+     * @param highlighted 设置某天背景颜色改变（true改变，false不变）
+     * @param value
+     * @param rangeState  MonthCellDescriptor.RangeState.MIDDLE中间颜色
+     */
+    MonthCellDescriptor(Date date, boolean currentMonth, boolean selectable, boolean selected,
+                        boolean today, boolean highlighted, int value,String holiday, RangeState rangeState) {
+        this.date = date;
+        isCurrentMonth = currentMonth;
+        isSelectable = selectable;
+        isHighlighted = highlighted;
+        isSelected = selected;
+        isToday = today;
+        this.value = value;
+        this.holiday = holiday;
         this.rangeState = rangeState;
     }
 
@@ -85,6 +109,14 @@ class MonthCellDescriptor {
 
     public int getValue() {
         return value;
+    }
+
+    public String getHoliday() {
+        return holiday;
+    }
+
+    public void setHoliday(String holiday) {
+        this.holiday = holiday;
     }
 
     @Override

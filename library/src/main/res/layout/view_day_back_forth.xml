@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.squareup.timessquare.CalendarTextView
+            android:id="@+id/text_holiday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="清明"
+            android:textColor="@color/calendar_text_active"
+            android:textSize="10sp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/text_first_last"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:text="去"
+            android:textColor="@color/calendar_text_selected"
+            android:textSize="10sp"
+            android:visibility="visible" />
+    </FrameLayout>
+
+    <com.squareup.timessquare.CalendarTextView
+        android:id="@+id/day_view"
+        style="@style/CalendarCell.CalendarDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="30"
+        android:textColor="@color/calendar_text_active" />
+
+
+    <com.squareup.timessquare.CalendarTextView
+        android:id="@+id/text_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:gravity="bottom"
+        android:text="￥1000"
+        android:textColor="@color/calendar_text_active"
+        android:textSize="10sp"
+        android:visibility="visible" />
+</LinearLayout>

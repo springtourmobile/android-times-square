@@ -20,4 +20,8 @@
     <item name="android:textSize">@dimen/calendar_text_medium</item>
     <item name="android:textStyle">bold</item>
   </style>
+  <style name="CalendarCell.CalendarDateHoliday">
+    <item name="android:textSize">@dimen/calendar_text_holiday</item>
+    <item name="android:textStyle">bold</item>
+  </style>
 </resources>

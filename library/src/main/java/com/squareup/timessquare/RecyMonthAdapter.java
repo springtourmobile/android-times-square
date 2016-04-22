@@ -2,6 +2,7 @@ package com.squareup.timessquare;
 
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,13 +101,12 @@ public class RecyMonthAdapter extends RecyclerView.Adapter<RecyMonthAdapter.View
     @Override
     public void onBindViewHolder(RecyMonthAdapter.ViewHolder holder, int position) {
         final int originalDayOfWeek = today.get(Calendar.DAY_OF_WEEK);
-
         int firstDayOfWeek = today.getFirstDayOfWeek();
         final CalendarRowView headerRow = (CalendarRowView) holder.calendarGrid.getChildAt(0);
         for (int offset = 0; offset < 7; offset++) {
             today.set(Calendar.DAY_OF_WEEK, getDayOfWeek(firstDayOfWeek, offset, isRtl));
             final TextView textView = (TextView) headerRow.getChildAt(offset);
-            textView.setText(weekdayNameFormat.format(today.getTime()));
+            textView.setText(weekdayNameFormat.format(today.getTime()).replace("星期", ""));
         }
         today.set(Calendar.DAY_OF_WEEK, originalDayOfWeek);
 
@@ -128,12 +128,45 @@ public class RecyMonthAdapter extends RecyclerView.Adapter<RecyMonthAdapter.View
                     String cellDate = numberFormatter.format(cell.getValue());
                     if (!cellView.getDayOfMonthTextView().getText().equals(cellDate)) {
                         cellView.getDayOfMonthTextView().setText(cellDate);
+                        if (cell.isToday()) {
+                            cellView.getDayOfMonthTextView().setText("今天");
+                        }
                     }
                     cellView.setEnabled(cell.isCurrentMonth());
                     cellView.setClickable(!displayOnly);
 
                     cellView.setSelectable(cell.isSelectable());
-                    cellView.setSelected(cell.isSelected());
+                    if (null != cellView.getCustomView()) {
+                        cellView.getCustomView().setText("");
+                        cellView.getCustomView().setVisibility(View.VISIBLE);
+                    }
+                    if (null == cell.getRangeState() || cell.getRangeState() == MonthCellDescriptor.RangeState.NONE) {
+                        cellView.setSelected(cell.isSelected());
+                        if (null != cellView.getHolidayTextView()) {
+                            cellView.getHolidayTextView().setGravity(Gravity.CENTER);
+                        }
+                    } else {
+                        if (null != cellView.getCustomView()) {
+                            cellView.getCustomView().setVisibility(View.VISIBLE);
+                            if (cell.getRangeState() == MonthCellDescriptor.RangeState.FIRST) {
+                                cellView.getCustomView().setText("去");
+                                if (null != cellView.getHolidayTextView()) {
+                                    cellView.getHolidayTextView().setGravity(Gravity.LEFT);
+                                }
+                            }
+                            if (cell.getRangeState() == MonthCellDescriptor.RangeState.LAST) {
+                                cellView.getCustomView().setText("返");
+                                if (null != cellView.getHolidayTextView()) {
+                                    cellView.getHolidayTextView().setGravity(Gravity.LEFT);
+                                }
+                            }
+                        }
+                    }
+
+                    if (null != cellView.getPriceTextView()) {
+                        cellView.getPriceTextView().setText("￥100" + (position * i));
+                    }
+
                     cellView.setCurrentMonth(cell.isCurrentMonth());
                     cellView.setToday(cell.isToday());
                     cellView.setRangeState(cell.getRangeState());
@@ -175,7 +208,6 @@ public class RecyMonthAdapter extends RecyclerView.Adapter<RecyMonthAdapter.View
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
             calendarGrid = (CalendarGridView) itemView.findViewById(R.id.calendar_grid);
-
             calendarGrid.setDayViewAdapter(adapter);
             calendarGrid.setDividerColor(dividerColor);
             calendarGrid.setDayTextColor(dayTextColorResId);
@@ -183,7 +215,7 @@ public class RecyMonthAdapter extends RecyclerView.Adapter<RecyMonthAdapter.View
             calendarGrid.setDisplayHeader(displayHeader);
             calendarGrid.setHeaderTextColor(headerTextColor);
             if (dayBackgroundResId != 0) {
-                ((MonthView)itemView).setDayBackground(dayBackgroundResId);
+                ((MonthView) itemView).setDayBackground(dayBackgroundResId);
             }
         }
     }

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.squareup.timessquare.CalendarCellDecorator;
 import com.squareup.timessquare.CalendarPickerView;
 import com.squareup.timessquare.CalendarPickerView.SelectionMode;
+import com.squareup.timessquare.DayBackForthDayViewAdapter;
 import com.squareup.timessquare.DefaultDayViewAdapter;
 
 import java.util.ArrayList;
@@ -46,16 +47,17 @@ public class SampleTimesSquareActivity extends Activity {
         setContentView(R.layout.sample_calendar_picker);
         setDateList();
         final Calendar nextYear = Calendar.getInstance();
-        nextYear.add(Calendar.MONTH, 1);
+        nextYear.add(Calendar.YEAR, 1);
 
         final Calendar lastYear = Calendar.getInstance();
-        lastYear.add(Calendar.MONTH, -1);
+        lastYear.add(Calendar.YEAR, -1);
 
         Calendar today = Calendar.getInstance();
 
         today.add(Calendar.DATE, 1);
 
         calendar = (CalendarPickerView) findViewById(R.id.calendar_view);
+        calendar.setCustomDayView(new SampleDayViewAdapter());
         calendar.init(lastYear.getTime(), nextYear.getTime()) //
                 .inMode(SelectionMode.SINGLE) //
                 .withSelectedDate(new Date())
@@ -119,10 +121,8 @@ public class SampleTimesSquareActivity extends Activity {
                 setButtonsEnabled(single);
 
                 calendar.setCustomDayView(new SampleDayViewAdapter());
-                SampleDecorator sampleDecorator = new SampleDecorator();
-                sampleDecorator.setData(map);
-                calendar.setDecorators(Arrays.<CalendarCellDecorator>asList(sampleDecorator));
-                calendar.init(lastYear.getTime(), nextYear.getTime()) //
+                calendar.setDecorators(Arrays.<CalendarCellDecorator>asList());
+                calendar.init(new Date(), nextYear.getTime()) //
                         .inMode(SelectionMode.SINGLE) //
                         .withSelectedDate(new Date());
             }
@@ -152,7 +152,7 @@ public class SampleTimesSquareActivity extends Activity {
             public void onClick(View v) {
                 setButtonsEnabled(range);
 
-                calendar.setCustomDayView(new DefaultDayViewAdapter());
+                calendar.setCustomDayView(new DayBackForthDayViewAdapter());
                 Calendar today = Calendar.getInstance();
                 ArrayList<Date> dates = new ArrayList<Date>();
                 today.add(Calendar.DATE, 3);
