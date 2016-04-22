@@ -15,8 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:text="清明"
-            android:textColor="@color/calendar_text_active"
+            android:textColor="@color/calendar_text_selector"
             android:textSize="10sp"
             android:visibility="visible" />
 
@@ -26,7 +25,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:gravity="right"
-            android:text="去"
             android:textColor="@color/calendar_text_selected"
             android:textSize="10sp"
             android:visibility="visible" />
@@ -39,7 +37,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="30"
         android:textColor="@color/calendar_text_active" />
 
 
@@ -51,8 +48,7 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:gravity="bottom"
-        android:text="￥1000"
-        android:textColor="@color/calendar_text_active"
+        android:textColor="@color/calendar_text_price_selector"
         android:textSize="10sp"
         android:visibility="visible" />
 </LinearLayout>

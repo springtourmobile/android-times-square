@@ -51,7 +51,8 @@ class MonthCellDescriptor {
      * @param selected 是否选中
      * @param today 是否是今天
      * @param highlighted 设置某天背景颜色改变（true改变，false不变）
-     * @param value
+     * @param value 月份天数
+     * @param holiday 节假日名称
      * @param rangeState  MonthCellDescriptor.RangeState.MIDDLE中间颜色
      */
     MonthCellDescriptor(Date date, boolean currentMonth, boolean selectable, boolean selected,

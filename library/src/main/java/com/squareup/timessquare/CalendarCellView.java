@@ -51,6 +51,12 @@ public class CalendarCellView extends FrameLayout {
         if (this.isSelectable != isSelectable) {
             this.isSelectable = isSelectable;
             dayOfMonthTextView.setSelectable(isSelectable);
+            if(null != holidayTextView){
+                holidayTextView.setSelectable(isSelectable);
+            }
+            if(null != priceTextView){
+                priceTextView.setSelectable(isSelectable);
+            }
             refreshDrawableState();
         }
     }
@@ -59,6 +65,12 @@ public class CalendarCellView extends FrameLayout {
         if (this.isCurrentMonth != isCurrentMonth) {
             this.isCurrentMonth = isCurrentMonth;
             dayOfMonthTextView.setCurrentMonth(isCurrentMonth);
+            if(null != holidayTextView){
+                holidayTextView.setCurrentMonth(isCurrentMonth);
+            }
+            if(null != priceTextView){
+                priceTextView.setCurrentMonth(isCurrentMonth);
+            }
             refreshDrawableState();
         }
     }
@@ -67,6 +79,12 @@ public class CalendarCellView extends FrameLayout {
         if (this.isToday != isToday) {
             this.isToday = isToday;
             dayOfMonthTextView.setToday(isToday);
+            if(null != holidayTextView){
+                holidayTextView.setToday(isToday);
+            }
+            if(null != priceTextView){
+                priceTextView.setToday(isToday);
+            }
             refreshDrawableState();
         }
     }
@@ -75,6 +93,12 @@ public class CalendarCellView extends FrameLayout {
         if (this.rangeState != rangeState) {
             this.rangeState = rangeState;
             dayOfMonthTextView.setRangeState(rangeState);
+            if(null != holidayTextView){
+                holidayTextView.setRangeState(rangeState);
+            }
+            if(null != priceTextView){
+                priceTextView.setRangeState(rangeState);
+            }
             refreshDrawableState();
         }
     }
@@ -83,6 +107,12 @@ public class CalendarCellView extends FrameLayout {
         if (this.isHighlighted != isHighlighted) {
             this.isHighlighted = isHighlighted;
             dayOfMonthTextView.setHighlighted(isHighlighted);
+            if(null != holidayTextView){
+                holidayTextView.setHighlighted(isHighlighted);
+            }
+            if(null != priceTextView){
+                priceTextView.setHighlighted(isHighlighted);
+            }
             refreshDrawableState();
         }
     }

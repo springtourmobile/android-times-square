@@ -47,6 +47,7 @@ public class RecyMonthAdapter extends RecyclerView.Adapter<RecyMonthAdapter.View
     private Typeface dateTypeface; //日期字体样式
 
     private boolean isRtl;
+    private LunarCalendar lunarCalendar; //计算农历类（节假日）
 
     public RecyMonthAdapter(DateFormat weekdayNameFormat, MonthView.Listener listener, Calendar today, int dividerColor,
                             int dayBackgroundResId, int dayTextColorResId, int titleTextColor, boolean displayHeader,
@@ -136,6 +137,7 @@ public class RecyMonthAdapter extends RecyclerView.Adapter<RecyMonthAdapter.View
                     cellView.setClickable(!displayOnly);
 
                     cellView.setSelectable(cell.isSelectable());
+                    cellView.setHighlighted(cell.isHighlighted());
                     if (null != cellView.getCustomView()) {
                         cellView.getCustomView().setText("");
                         cellView.getCustomView().setVisibility(View.VISIBLE);
@@ -149,12 +151,14 @@ public class RecyMonthAdapter extends RecyclerView.Adapter<RecyMonthAdapter.View
                         if (null != cellView.getCustomView()) {
                             cellView.getCustomView().setVisibility(View.VISIBLE);
                             if (cell.getRangeState() == MonthCellDescriptor.RangeState.FIRST) {
+                                cellView.setHighlighted(false);
                                 cellView.getCustomView().setText("去");
                                 if (null != cellView.getHolidayTextView()) {
                                     cellView.getHolidayTextView().setGravity(Gravity.LEFT);
                                 }
                             }
                             if (cell.getRangeState() == MonthCellDescriptor.RangeState.LAST) {
+                                cellView.setHighlighted(false);
                                 cellView.getCustomView().setText("返");
                                 if (null != cellView.getHolidayTextView()) {
                                     cellView.getHolidayTextView().setGravity(Gravity.LEFT);
@@ -163,14 +167,24 @@ public class RecyMonthAdapter extends RecyclerView.Adapter<RecyMonthAdapter.View
                         }
                     }
 
-                    if (null != cellView.getPriceTextView()) {
+                    if (null != cellView.getPriceTextView()
+                            && cell.isCurrentMonth()) {
                         cellView.getPriceTextView().setText("￥100" + (position * i));
+                    } else {
+                        if (null != cellView.getPriceTextView()) {
+                            cellView.getPriceTextView().setText("");
+                        }
+                    }
+
+                    if (null != cellView.getHolidayTextView()) {
+                        if (!cellView.getHolidayTextView().getText().equals(cell.getHoliday())) {
+                            cellView.getHolidayTextView().setText(cell.getHoliday());
+                        }
                     }
 
                     cellView.setCurrentMonth(cell.isCurrentMonth());
                     cellView.setToday(cell.isToday());
                     cellView.setRangeState(cell.getRangeState());
-                    cellView.setHighlighted(cell.isHighlighted());
                     cellView.setTag(cell);
 
                     if (null != decorators) {

@@ -9,11 +9,6 @@ import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Toast;
 
 import com.squareup.timessquare.MonthCellDescriptor.RangeState;
@@ -108,6 +103,8 @@ public class CalendarPickerView extends RecyclerView {
     private DayViewAdapter dayViewAdapter = new DefaultDayViewAdapter();
 
     private Context mContext;
+    private LunarCalendar lunarCalendar; //计算节日
+    private List<Date> lunarCalendarDateList = new ArrayList<>();
 
     public void setDecorators(List<CalendarCellDecorator> decorators) {
         this.decorators = decorators;
@@ -117,7 +114,6 @@ public class CalendarPickerView extends RecyclerView {
         if (null != headersMonthAdapter) {
             headersMonthAdapter.notifyDataSetChanged();
         }
-        Log.e("春秋旅游", "------setDecorators-------");
     }
 
     public List<CalendarCellDecorator> getDecorators() {
@@ -156,6 +152,7 @@ public class CalendarPickerView extends RecyclerView {
         minCal = Calendar.getInstance(locale);
         maxCal = Calendar.getInstance(locale);
         monthCounter = Calendar.getInstance(locale);
+        lunarCalendar = new LunarCalendar();
         monthNameFormat = new SimpleDateFormat(context.getString(R.string.month_name_format), locale);
         weekdayNameFormat = new SimpleDateFormat(context.getString(R.string.day_name_format), locale);
         fullDateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
@@ -230,7 +227,9 @@ public class CalendarPickerView extends RecyclerView {
         selectedCells.clear();
         highlightedCals.clear();
         highlightedCells.clear();
-
+        if(null != lunarCalendarDateList && lunarCalendarDateList.size()>0){
+            lunarCalendarDateList.clear();
+        }
         // Clear previous state.
         cells.clear();
         months.clear();
@@ -361,7 +360,6 @@ public class CalendarPickerView extends RecyclerView {
 //        if(null != adapter){
 //            adapter.notifyDataSetChanged();
 //        }
-        Log.e("春秋旅游", "------validateAndUpdate-------");
         if (null != headersMonthAdapter) {
             headersMonthAdapter.notifyDataSetChanged();
         }
@@ -673,7 +671,6 @@ public class CalendarPickerView extends RecyclerView {
                 }
             }
         }
-        Log.e("春秋旅游", "-------doSelectDate-----");
         // Update the adapter.
         validateAndUpdate();
         return date != null;
@@ -785,58 +782,13 @@ public class CalendarPickerView extends RecyclerView {
         return null;
     }
 
-    // TODO: 2016/4/20 ListView 使用的适配器
-    private class MonthAdapter extends BaseAdapter {
-        private final LayoutInflater inflater;
-
-        private MonthAdapter() {
-            inflater = LayoutInflater.from(getContext());
-        }
-
-        @Override
-        public boolean isEnabled(int position) {
-            // Disable selectability: each cell will handle that itself.
-            return false;
-        }
-
-        @Override
-        public int getCount() {
-            return months.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return months.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            MonthView monthView = (MonthView) convertView;
-            if (monthView == null
-                    || !monthView.getTag(R.id.day_view_adapter_class).equals(dayViewAdapter.getClass())) {
-                monthView =
-                        MonthView.create(parent, inflater, weekdayNameFormat, listener, today, dividerColor,
-                                dayBackgroundResId, dayTextColorResId, titleTextColor, displayHeader,
-                                headerTextColor, decorators, locale, dayViewAdapter);
-                monthView.setTag(R.id.day_view_adapter_class, dayViewAdapter.getClass());
-            } else {
-                monthView.setDecorators(decorators);
-            }
-            monthView.init(months.get(position), cells.get(position), displayOnly, titleTypeface,
-                    dateTypeface);
-            return monthView;
-        }
+    /**
+     * 节假日数据
+     * @return
+     */
+    public List<Date> getlunarCalendarDateList(){
+        return lunarCalendarDateList;
     }
-
-    private static boolean isLeapyear = false; // 是否为闰年
-    private static int daysOfMonth = 0; // 某月的天数
-    private static int dayOfWeek = 0; // 具体某一天是星期几
-    private static int lastDaysOfMonth = 0; // 上一个月的总天数
 
     List<List<MonthCellDescriptor>> getMonthCells(MonthDescriptor month, Calendar startCal) {
         Calendar cal = Calendar.getInstance(locale);
@@ -849,10 +801,8 @@ public class CalendarPickerView extends RecyclerView {
             offset -= 7;
         }
         cal.add(Calendar.DATE, offset);
-
         Calendar minSelectedCal = minDate(selectedCals);
         Calendar maxSelectedCal = maxDate(selectedCals);
-
         while ((cal.get(MONTH) < month.getMonth() + 1 || cal.get(YEAR) < month.getYear()) //
                 && cal.get(YEAR) <= month.getYear()) {
             Logr.d("Building week row starting at %s", cal.getTime());
@@ -878,14 +828,49 @@ public class CalendarPickerView extends RecyclerView {
                         rangeState = MonthCellDescriptor.RangeState.MIDDLE;
                     }
                 }
-
+                String holiday = lunarCalendar.getLunarDate(month.getYear(), month.getMonth()+1, value, false);
+                if(null != holiday && !"".equals(holiday)){
+                    if (date.before(minCal.getTime()) || date.after(maxCal.getTime())) {
+                    }else {
+                        lunarCalendarDateList.add(StringToDate(month.getYear()+"-"+(month.getMonth()+1)+"-"+value));
+                    }
+                }
                 weekCells.add(
                         new MonthCellDescriptor(date, isCurrentMonth, isSelectable, isSelected, isToday,
-                                isHighlighted, value, rangeState));
+                                isHighlighted, value, holiday, rangeState));
                 cal.add(DATE, 1);
             }
         }
         return cells;
+    }
+
+
+    /**
+     * 将日期字符串转化为日期。失败返回null。
+     *
+     * @param date     日期字符串
+     * @return 日期
+     */
+    public static Date StringToDate(String date) {
+        Date myDate = null;
+        if (date != null) {
+            try {
+                myDate = getDateFormat("yyyy-MM-dd").parse(date);
+            } catch (Exception e) {
+            }
+        }
+        return myDate;
+    }
+
+    /**
+     * 获取SimpleDateFormat
+     *
+     * @param parttern 日期格式
+     * @return SimpleDateFormat对象
+     * @throws RuntimeException 异常：非法日期格式
+     */
+    private static SimpleDateFormat getDateFormat(String parttern) throws RuntimeException {
+        return new SimpleDateFormat(parttern);
     }
 
     private boolean containsDate(List<Calendar> selectedCals, Date date) {
@@ -992,7 +977,6 @@ public class CalendarPickerView extends RecyclerView {
         if (null != headersMonthAdapter) {
             headersMonthAdapter.notifyDataSetChanged();
         }
-        Log.e("春秋旅游", "------setCustomDayView-------");
     }
 
     /**
