@@ -5,10 +5,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.squareup.timessquare.MonthCellDescriptor.RangeState;
@@ -62,11 +65,8 @@ public class CalendarPickerView extends RecyclerView {
     }
 
     // TODO: 2016/4/21 RecyclerView
-//    private final AnimalsHeadersMonthAdapter headersMonthAdapter;
     private RecyMonthAdapter headersMonthAdapter;
-    private LinearLayoutManager layoutManager;
-    // TODO: 2016/4/21 ListView
-//    private final CalendarPickerView.MonthAdapter adapter;
+    private PreCachingLayoutManager layoutManager;
 
     private final List<List<List<MonthCellDescriptor>>> cells = new ArrayList<>();
     final MonthView.Listener listener = new CellClickedListener();
@@ -160,8 +160,9 @@ public class CalendarPickerView extends RecyclerView {
         headersMonthAdapter = new RecyMonthAdapter(weekdayNameFormat, listener, today, dividerColor,
                 dayBackgroundResId, dayTextColorResId, titleTextColor, displayHeader,
                 headerTextColor, decorators, locale, dayViewAdapter);
-        layoutManager = new LinearLayoutManager(context);
+        layoutManager = new PreCachingLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setExtraLayoutSpace(getScreenHeight(mContext));
         headersMonthAdapter.initYearsOrMonthData(months, titleTypeface);
         headersMonthAdapter.initDayMonthData(cells, dateTypeface, displayOnly);
         setLayoutManager(layoutManager);
@@ -175,7 +176,17 @@ public class CalendarPickerView extends RecyclerView {
                     .withSelectedDate(new Date());
         }
     }
-
+    /**
+     * @param context
+     * @return the screen height in pixels
+     */
+    public static int getScreenHeight(Context context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size.y;
+    }
     /**
      * Both date parameters must be non-null and their {@link Date#getTime()} must not return 0. Time
      * of day will be ignored.  For instance, if you pass in {@code minDate} as 11/16/2012 5:15pm and
@@ -968,8 +979,9 @@ public class CalendarPickerView extends RecyclerView {
         headersMonthAdapter = new RecyMonthAdapter(weekdayNameFormat, listener, today, dividerColor,
                 dayBackgroundResId, dayTextColorResId, titleTextColor, displayHeader,
                 headerTextColor, decorators, locale, dayViewAdapter);
-        layoutManager = new LinearLayoutManager(mContext);
+        layoutManager = new PreCachingLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setExtraLayoutSpace(getScreenHeight(mContext));
         headersMonthAdapter.initYearsOrMonthData(months, titleTypeface);
         headersMonthAdapter.initDayMonthData(cells, dateTypeface, displayOnly);
         setLayoutManager(layoutManager);
@@ -1033,9 +1045,11 @@ public class CalendarPickerView extends RecyclerView {
     private class DefaultOnInvalidDateSelectedListener implements OnInvalidDateSelectedListener {
         @Override
         public void onInvalidDateSelected(Date date) {
+//            String errMessage =
+//                    getResources().getString(R.string.invalid_date, fullDateFormat.format(minCal.getTime()),
+//                            fullDateFormat.format(maxCal.getTime()));
             String errMessage =
-                    getResources().getString(R.string.invalid_date, fullDateFormat.format(minCal.getTime()),
-                            fullDateFormat.format(maxCal.getTime()));
+                    getResources().getString(R.string.invalid_date_hnt);
             Toast.makeText(getContext(), errMessage, Toast.LENGTH_SHORT).show();
         }
     }

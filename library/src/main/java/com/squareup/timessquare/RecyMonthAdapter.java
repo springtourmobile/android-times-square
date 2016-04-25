@@ -138,6 +138,7 @@ public class RecyMonthAdapter extends RecyclerView.Adapter<RecyMonthAdapter.View
 
                     cellView.setSelectable(cell.isSelectable());
                     cellView.setHighlighted(cell.isHighlighted());
+                    cellView.setToday(cell.isToday());
                     if (null != cellView.getCustomView()) {
                         cellView.getCustomView().setText("");
                         cellView.getCustomView().setVisibility(View.VISIBLE);
@@ -152,6 +153,7 @@ public class RecyMonthAdapter extends RecyclerView.Adapter<RecyMonthAdapter.View
                             cellView.getCustomView().setVisibility(View.VISIBLE);
                             if (cell.getRangeState() == MonthCellDescriptor.RangeState.FIRST) {
                                 cellView.setHighlighted(false);
+                                cellView.setToday(false);
                                 cellView.getCustomView().setText("去");
                                 if (null != cellView.getHolidayTextView()) {
                                     cellView.getHolidayTextView().setGravity(Gravity.LEFT);
@@ -159,6 +161,7 @@ public class RecyMonthAdapter extends RecyclerView.Adapter<RecyMonthAdapter.View
                             }
                             if (cell.getRangeState() == MonthCellDescriptor.RangeState.LAST) {
                                 cellView.setHighlighted(false);
+                                cellView.setToday(false);
                                 cellView.getCustomView().setText("返");
                                 if (null != cellView.getHolidayTextView()) {
                                     cellView.getHolidayTextView().setGravity(Gravity.LEFT);
@@ -166,16 +169,6 @@ public class RecyMonthAdapter extends RecyclerView.Adapter<RecyMonthAdapter.View
                             }
                         }
                     }
-
-                    if (null != cellView.getPriceTextView()
-                            && cell.isCurrentMonth()) {
-                        cellView.getPriceTextView().setText("￥100" + (position * i));
-                    } else {
-                        if (null != cellView.getPriceTextView()) {
-                            cellView.getPriceTextView().setText("");
-                        }
-                    }
-
                     if (null != cellView.getHolidayTextView()) {
                         if (!cellView.getHolidayTextView().getText().equals(cell.getHoliday())) {
                             cellView.getHolidayTextView().setText(cell.getHoliday());
@@ -183,10 +176,8 @@ public class RecyMonthAdapter extends RecyclerView.Adapter<RecyMonthAdapter.View
                     }
 
                     cellView.setCurrentMonth(cell.isCurrentMonth());
-                    cellView.setToday(cell.isToday());
                     cellView.setRangeState(cell.getRangeState());
                     cellView.setTag(cell);
-
                     if (null != decorators) {
                         for (CalendarCellDecorator decorator : decorators) {
                             decorator.decorate(cellView, cell.getDate());

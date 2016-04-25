@@ -4,5 +4,6 @@
 <resources>
   <string name="day_name_format">EEEE</string>
   <string name="invalid_date">Date must be between %1$s and %2$s.</string>
+  <string name="invalid_date_hnt">不可售卖</string>
   <string name="month_name_format">yyyy年MM月</string>
 </resources>

@@ -38,6 +38,7 @@ dependencies {
   testCompile deps.robolectric
   testCompile deps.intellijannotations
   compile 'com.android.support:recyclerview-v7:23.0.1'
+  compile 'com.alibaba:fastjson:1.2.9'
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

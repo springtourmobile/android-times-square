@@ -47,7 +47,7 @@ public class SampleTimesSquareActivity extends Activity {
         setContentView(R.layout.sample_calendar_picker);
         setDateList();
         final Calendar nextYear = Calendar.getInstance();
-        nextYear.add(Calendar.YEAR, 1);
+        nextYear.add(Calendar.MONTH, 6);
 
         final Calendar lastYear = Calendar.getInstance();
         lastYear.add(Calendar.YEAR, -1);
@@ -151,15 +151,23 @@ public class SampleTimesSquareActivity extends Activity {
             @Override
             public void onClick(View v) {
                 setButtonsEnabled(range);
-
-                calendar.setCustomDayView(new DayBackForthDayViewAdapter());
+                DayBackForthDayViewAdapter dayViewAdapter = new DayBackForthDayViewAdapter();
+                final PriceDayDecorator priceDayDecorator = new PriceDayDecorator();
+                priceDayDecorator.initData();
+                calendar.setDecorators(Arrays.<CalendarCellDecorator>asList(priceDayDecorator));
+                calendar.setDateSelectableFilter(new CalendarPickerView.DateSelectableFilter() {
+                    @Override
+                    public boolean isDateSelectable(Date date) {
+                        return priceDayDecorator.isDate(date);
+                    }
+                });
+                calendar.setCustomDayView(dayViewAdapter);
                 Calendar today = Calendar.getInstance();
                 ArrayList<Date> dates = new ArrayList<Date>();
                 today.add(Calendar.DATE, 3);
                 dates.add(today.getTime());
                 today.add(Calendar.DATE, 5);
                 dates.add(today.getTime());
-                calendar.setDecorators(Collections.<CalendarCellDecorator>emptyList());
                 calendar.init(new Date(), nextYear.getTime()) //
                         .inMode(SelectionMode.RANGE) //
                         .withSelectedDates(dates)
