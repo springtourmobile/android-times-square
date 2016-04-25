@@ -1048,9 +1048,9 @@ public class CalendarPickerView extends RecyclerView {
 //            String errMessage =
 //                    getResources().getString(R.string.invalid_date, fullDateFormat.format(minCal.getTime()),
 //                            fullDateFormat.format(maxCal.getTime()));
-            String errMessage =
-                    getResources().getString(R.string.invalid_date_hnt);
-            Toast.makeText(getContext(), errMessage, Toast.LENGTH_SHORT).show();
+//            String errMessage =
+//                    getResources().getString(R.string.invalid_date_hnt);
+//            Toast.makeText(getContext(), errMessage, Toast.LENGTH_SHORT).show();
         }
     }
 }

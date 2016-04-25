@@ -155,12 +155,12 @@ public class SampleTimesSquareActivity extends Activity {
                 final PriceDayDecorator priceDayDecorator = new PriceDayDecorator();
                 priceDayDecorator.initData();
                 calendar.setDecorators(Arrays.<CalendarCellDecorator>asList(priceDayDecorator));
-                calendar.setDateSelectableFilter(new CalendarPickerView.DateSelectableFilter() {
-                    @Override
-                    public boolean isDateSelectable(Date date) {
-                        return priceDayDecorator.isDate(date);
-                    }
-                });
+//                calendar.setDateSelectableFilter(new CalendarPickerView.DateSelectableFilter() {
+//                    @Override
+//                    public boolean isDateSelectable(Date date) {
+//                        return priceDayDecorator.isDate(date);
+//                    }
+//                });
                 calendar.setCustomDayView(dayViewAdapter);
                 Calendar today = Calendar.getInstance();
                 ArrayList<Date> dates = new ArrayList<Date>();
@@ -170,6 +170,7 @@ public class SampleTimesSquareActivity extends Activity {
                 dates.add(today.getTime());
                 calendar.init(new Date(), nextYear.getTime()) //
                         .inMode(SelectionMode.RANGE) //
+//                        .withSelectedDate(new Date())
                         .withSelectedDates(dates)
                         .withHighlightedDates(calendar.getlunarCalendarDateList());
             }
